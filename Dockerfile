@@ -39,6 +39,7 @@ RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
 # scientific / popgen stack. pg_gpu pins python >=3.12,<3.13. matplotlib and
 # seaborn are explicit additions on top of pg_gpu's own dependency set.
 # htslib provides bgzip/tabix used by bio2zarr's VCF round-trips.
+# dask is pinned to >=2025.1.0 for numpy 2.0 compatibility.
 RUN micromamba install -y -p /opt/conda -c conda-forge -c bioconda \
         python=3.12 \
         pip \
@@ -50,6 +51,7 @@ RUN micromamba install -y -p /opt/conda -c conda-forge -c bioconda \
         "h5py>=3.0" \
         "tqdm>=4.0" \
         "zarr>=2.16" \
+        "dask>=2025.1.0" \
         "htslib>=1.19" \
         matplotlib \
         seaborn \

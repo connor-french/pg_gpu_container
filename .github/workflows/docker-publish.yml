@@ -2,7 +2,7 @@ name: build-and-push
 
 # Builds the pg_gpu image natively on an amd64 runner and pushes it to
 # Docker Hub. Requires two repository secrets:
-#   DOCKERHUB_USERNAME - your Docker Hub account/namespace (connormfrench)
+#   DOCKERHUB_USERNAME - your Docker Hub account/namespace (connorfrench)
 #   DOCKERHUB_TOKEN    - a Docker Hub access token (Account Settings -> Security)
 
 on:
@@ -31,7 +31,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: connormfrench/pg_gpu
+          images: connorfrench/pg_gpu
           tags: |
             type=ref,event=branch
             type=ref,event=tag

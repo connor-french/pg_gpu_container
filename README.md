@@ -4,10 +4,10 @@ A container for [**pg_gpu**](https://github.com/kr-colab/pg_gpu) — GPU-acceler
 population genetics statistics built on CuPy — bundled with the scientific-Python
 stack you typically need around it.
 
-**Image:** [`connormfrench/pg_gpu`](https://hub.docker.com/r/connormfrench/pg_gpu)
+**Image:** [`connorfrench/pg_gpu`](https://hub.docker.com/r/connorfrench/pg_gpu)
 
 ```bash
-docker pull connormfrench/pg_gpu:latest
+docker pull connorfrench/pg_gpu:latest
 ```
 
 ## What's inside
@@ -34,14 +34,14 @@ The host must have a recent NVIDIA driver and the
 
 ```bash
 # Confirm the GPU is visible inside the container
-docker run --rm --gpus all connormfrench/pg_gpu:latest nvidia-smi
+docker run --rm --gpus all connorfrench/pg_gpu:latest nvidia-smi
 
 # Confirm cupy + pg_gpu import against the GPU
-docker run --rm --gpus all connormfrench/pg_gpu:latest \
+docker run --rm --gpus all connorfrench/pg_gpu:latest \
   python -c "import cupy, pg_gpu; print(cupy.cuda.runtime.getDeviceCount(), 'GPU(s)')"
 
 # Run your own script, mounting the current directory
-docker run --rm --gpus all -v "$PWD:/work" connormfrench/pg_gpu:latest \
+docker run --rm --gpus all -v "$PWD:/work" connorfrench/pg_gpu:latest \
   python my_analysis.py
 ```
 
@@ -60,7 +60,7 @@ In a process definition:
 
 ```groovy
 process popgen_stats {
-    container 'connormfrench/pg_gpu:latest'
+    container 'connorfrench/pg_gpu:latest'
     accelerator 1, type: 'nvidia.com/gpu'   // request one GPU (Kubernetes/SLURM-aware)
 
     input:
@@ -83,7 +83,7 @@ Or set it globally in `nextflow.config`:
 
 ```groovy
 process {
-    container = 'connormfrench/pg_gpu:latest'
+    container = 'connorfrench/pg_gpu:latest'
     withName: popgen_stats {
         accelerator = 1
     }
@@ -105,7 +105,7 @@ docker {
 Run it:
 
 ```bash
-nextflow run main.nf -with-docker connormfrench/pg_gpu:latest
+nextflow run main.nf -with-docker connorfrench/pg_gpu:latest
 ```
 
 To expose specific GPUs only, use `--gpus '"device=0,1"'` in `runOptions`.
@@ -125,7 +125,7 @@ apptainer {
     runOptions = '--nv'   // bind host CUDA driver into the container
 }
 process {
-    container = 'docker://connormfrench/pg_gpu:latest'
+    container = 'docker://connorfrench/pg_gpu:latest'
 }
 ```
 
@@ -135,14 +135,14 @@ process {
 Run it:
 
 ```bash
-nextflow run main.nf -with-apptainer docker://connormfrench/pg_gpu:latest
-# or, older:  nextflow run main.nf -with-singularity docker://connormfrench/pg_gpu:latest
+nextflow run main.nf -with-apptainer docker://connorfrench/pg_gpu:latest
+# or, older:  nextflow run main.nf -with-singularity docker://connorfrench/pg_gpu:latest
 ```
 
 You can also pre-build the SIF once and reuse it:
 
 ```bash
-apptainer pull pg_gpu.sif docker://connormfrench/pg_gpu:latest
+apptainer pull pg_gpu.sif docker://connorfrench/pg_gpu:latest
 # then reference  file:///abs/path/pg_gpu.sif  as the container
 ```
 
@@ -175,23 +175,23 @@ runner and pushes to Docker Hub on every push to `main` and on `v*` tags.
 
 To enable publishing, add two repository secrets:
 
-- `DOCKERHUB_USERNAME` → `connormfrench`
+- `DOCKERHUB_USERNAME` → `connorfrench`
 - `DOCKERHUB_TOKEN` → a Docker Hub access token
 
 Tagging a release pushes a versioned tag:
 
 ```bash
-git tag v0.1.0 && git push origin v0.1.0   # -> connormfrench/pg_gpu:0.1.0 + :latest
+git tag v0.1.0 && git push origin v0.1.0   # -> connorfrench/pg_gpu:0.1.0 + :latest
 ```
 
 ### Building locally
 
 ```bash
 # On an amd64 host:
-docker build -t connormfrench/pg_gpu:latest .
+docker build -t connorfrench/pg_gpu:latest .
 
 # On Apple Silicon / other arm64 (emulated; all deps are prebuilt wheels):
-docker buildx build --platform linux/amd64 -t connormfrench/pg_gpu:latest --push .
+docker buildx build --platform linux/amd64 -t connorfrench/pg_gpu:latest --push .
 ```
 
 > **Note:** the build runs a CPU-only import smoke test. The GPU code paths
